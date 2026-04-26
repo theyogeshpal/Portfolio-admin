@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Plus, Trash2, ExternalLink, Image as ImageIcon, Loader2, Edit3, Star } from 'lucide-react';
+import { Plus, Trash2, ExternalLink, Image as ImageIcon, Loader2, Edit3, Star, Search, X } from 'lucide-react';
 import Modal from '../components/Modal';
 
 const Projects = () => {

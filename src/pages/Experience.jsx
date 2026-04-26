@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Trash2, Briefcase, MapPin, Plus, Loader2, Edit3 } from 'lucide-react';
+import { Trash2, Briefcase, MapPin, Plus, Loader2, Edit3, X } from 'lucide-react';
 import Modal from '../components/Modal';
 
 const Experience = () => {
