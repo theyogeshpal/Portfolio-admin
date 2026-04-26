@@ -75,43 +75,57 @@ const Education = () => {
   };
 
   return (
-    <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-        <h2>Education</h2>
+    <div className="space-y-6">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h2 className="text-2xl font-bold text-slate-800">Education</h2>
+          <p className="text-slate-500 text-sm">Manage your academic qualifications</p>
+        </div>
         <button 
           onClick={() => { resetForm(); setIsModalOpen(true); }}
-          className="login-submit-btn" style={{ width: 'auto', padding: '10px 20px', display: 'flex', alignItems: 'center', gap: '8px' }}
+          className="flex items-center gap-2 bg-primary hover:bg-primary-hover text-white px-6 py-2.5 rounded-xl font-bold shadow-lg shadow-primary/20 transition-all active:scale-95"
         >
-          <Plus size={18} /> Add Education
+          <Plus size={20} /> Add Education
         </button>
       </div>
 
       {loading ? (
-        <div style={{ display: 'flex', justifyContent: 'center', padding: '40px' }}><Loader2 className="animate-spin" /></div>
+        <div className="flex flex-col items-center justify-center py-20 gap-4">
+          <Loader2 className="animate-spin text-primary" size={40} />
+          <p className="text-slate-500 font-medium">Loading academic records...</p>
+        </div>
       ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', gap: '24px' }}>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {education.map((edu) => (
-            <div key={edu._id} style={{ 
-              padding: '24px', border: '1px solid #e2e8f0', borderRadius: '16px', 
-              backgroundColor: '#fff', position: 'relative'
-            }}>
-              <div style={{ display: 'flex', gap: '16px', marginBottom: '16px' }}>
-                <div style={{ width: '50px', height: '50px', borderRadius: '10px', backgroundColor: '#f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <GraduationCap color="#6366f1" />
+            <div key={edu._id} className="p-6 bg-white rounded-2xl border border-slate-200 shadow-sm relative group hover:shadow-md transition-all">
+              <div className="flex gap-4 mb-6">
+                <div className="w-12 h-12 shrink-0 bg-slate-50 rounded-xl flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all duration-300">
+                  <GraduationCap size={24} />
                 </div>
                 <div>
-                  <h4 style={{ fontSize: '1.1rem' }}>{edu.title}</h4>
-                  <p style={{ color: '#6366f1', fontWeight: 600, fontSize: '0.9rem' }}>{edu.board}</p>
+                  <h4 className="font-bold text-slate-800 text-lg leading-tight">{edu.title}</h4>
+                  <p className="text-primary font-bold text-sm uppercase tracking-wide mt-1">{edu.board}</p>
                 </div>
               </div>
-              <p style={{ fontSize: '0.85rem', color: '#64748b', fontWeight: 500 }}>{edu.year}</p>
-              <p style={{ marginTop: '12px', fontSize: '0.9rem', color: '#334155', lineHeight: 1.5 }}>{edu.description}</p>
-              <div style={{ display: 'flex', gap: '12px', marginTop: '20px', borderTop: '1px solid #f1f5f9', paddingTop: '12px' }}>
-                <button onClick={() => handleEdit(edu)} style={{ color: '#6366f1', border: 'none', background: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.85rem' }}>
-                  <Edit3 size={16} /> Edit
+              
+              <div className="inline-block px-3 py-1 bg-slate-100 text-slate-600 rounded-lg text-xs font-bold mb-4">
+                {edu.year}
+              </div>
+              
+              <p className="text-slate-600 text-sm leading-relaxed mb-6 line-clamp-3">{edu.description}</p>
+              
+              <div className="flex items-center gap-4 pt-4 border-t border-slate-50">
+                <button 
+                  onClick={() => handleEdit(edu)} 
+                  className="flex items-center gap-2 text-xs font-bold text-slate-400 hover:text-primary transition-colors"
+                >
+                  <Edit3 size={14} /> Edit
                 </button>
-                <button onClick={() => deleteEdu(edu._id)} style={{ color: '#ef4444', border: 'none', background: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.85rem' }}>
-                  <Trash2 size={16} /> Delete
+                <button 
+                  onClick={() => deleteEdu(edu._id)} 
+                  className="flex items-center gap-2 text-xs font-bold text-slate-400 hover:text-red-500 transition-colors"
+                >
+                  <Trash2 size={14} /> Remove
                 </button>
               </div>
             </div>
@@ -120,14 +134,70 @@ const Education = () => {
       )}
 
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title={editId ? "Edit Education" : "Add Education"}>
-        <form onSubmit={handleSubmit} className="modal-form">
-          <div className="form-group"><label>Degree / Certificate Title</label><input type="text" required value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} /></div>
-          <div className="form-row">
-            <div className="form-group"><label>Board / University</label><input type="text" required value={formData.board} onChange={e => setFormData({...formData, board: e.target.value})} /></div>
-            <div className="form-group"><label>Year</label><input type="text" required value={formData.year} onChange={e => setFormData({...formData, year: e.target.value})} /></div>
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <div className="space-y-2">
+            <label className="text-sm font-bold text-slate-700">Degree / Certificate Title</label>
+            <input 
+              type="text" 
+              required 
+              value={formData.title} 
+              onChange={e => setFormData({...formData, title: e.target.value})} 
+              className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none"
+              placeholder="E.g. Bachelor of Technology"
+            />
           </div>
-          <div className="form-group"><label>Description</label><textarea rows="3" value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} style={{ width: '100%', padding: '12px', border: '1px solid var(--border-color)', borderRadius: '10px' }} /></div>
-          <button type="submit" className="login-submit-btn">{editId ? 'Update Education' : 'Save Education'}</button>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div className="space-y-2">
+              <label className="text-sm font-bold text-slate-700">Board / University</label>
+              <input 
+                type="text" 
+                required 
+                value={formData.board} 
+                onChange={e => setFormData({...formData, board: e.target.value})} 
+                className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none"
+                placeholder="E.g. AKTU University"
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-bold text-slate-700">Year</label>
+              <input 
+                type="text" 
+                required 
+                value={formData.year} 
+                onChange={e => setFormData({...formData, year: e.target.value})} 
+                className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none"
+                placeholder="E.g. 2018 - 2022"
+              />
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-sm font-bold text-slate-700">Description</label>
+            <textarea 
+              rows="4" 
+              value={formData.description} 
+              onChange={e => setFormData({...formData, description: e.target.value})} 
+              className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none resize-none"
+              placeholder="Describe your studies, honors, or key subjects..."
+            />
+          </div>
+
+          <div className="flex gap-3 pt-4">
+            <button 
+              type="button" 
+              onClick={() => setIsModalOpen(false)}
+              className="flex-1 px-6 py-3 border border-slate-200 text-slate-600 font-bold rounded-xl hover:bg-slate-50 transition-all"
+            >
+              Cancel
+            </button>
+            <button 
+              type="submit" 
+              className="flex-1 bg-primary text-white font-bold py-3 rounded-xl shadow-lg shadow-primary/20 hover:bg-primary-hover transition-all"
+            >
+              {editId ? 'Update Education' : 'Save Education'}
+            </button>
+          </div>
         </form>
       </Modal>
     </div>

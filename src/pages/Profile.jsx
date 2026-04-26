@@ -89,205 +89,250 @@ const Profile = () => {
     return `${API_URL}/${url.replace('./', '')}`;
   };
 
-  if (loading) return <div style={{ display: 'flex', justifyContent: 'center', padding: '100px' }}><Loader2 className="animate-spin" size={48} color="#6366f1" /></div>;
+  if (loading) return <div className="flex items-center justify-center min-h-[400px]"><Loader2 className="animate-spin text-primary" size={48} /></div>;
 
   return (
-    <div className="profile-page">
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px' }}>
-        <h2>Global Settings & Profile</h2>
-        <button onClick={handleUpdate} disabled={saving} className="login-submit-btn" style={{ width: 'auto', padding: '12px 28px' }}>
-          {saving ? <Loader2 className="animate-spin" size={20} /> : <Save size={20} />} Save Changes
+    <div className="space-y-8">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h2 className="text-2xl font-bold text-slate-800">Global Settings & Profile</h2>
+          <p className="text-slate-500 text-sm">Configure your hero section, bio, assets and social links</p>
+        </div>
+        <button 
+          onClick={handleUpdate} 
+          disabled={saving} 
+          className="flex items-center gap-2 bg-primary hover:bg-primary-hover text-white px-8 py-3 rounded-xl font-bold shadow-lg shadow-primary/20 transition-all active:scale-95 disabled:opacity-50"
+        >
+          {saving ? <Loader2 className="animate-spin" size={20} /> : <Save size={20} />} 
+          <span>{saving ? 'Saving Changes...' : 'Save Changes'}</span>
         </button>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '32px' }}>
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
         {/* Left Column: Images & Assets */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
-          <div style={{ padding: '24px', background: '#fff', borderRadius: '16px', border: '1px solid #e2e8f0' }}>
-            <h4 style={{ marginBottom: '20px' }}>Hero Section Headings</h4>
-            <div className="form-group">
-                <label>Main Hero Heading</label>
-                <input type="text" value={profile.contact.name || ''} onChange={e => setProfile({...profile, contact: {...profile.contact, name: e.target.value}})} placeholder="e.g. Yogesh Pal" />
-            </div>
-            <div className="form-group" style={{ marginTop: '16px' }}>
-                <label>Hero Tagline / Sub-heading</label>
-                <input type="text" value={profile.contact.tagline || ''} onChange={e => setProfile({...profile, contact: {...profile.contact, tagline: e.target.value}})} />
+        <div className="space-y-8">
+          <div className="p-6 bg-white rounded-2xl border border-slate-200 shadow-sm space-y-6">
+            <h4 className="text-lg font-bold text-slate-800 pb-4 border-b border-slate-100 flex items-center gap-2">
+              <User className="text-primary" size={20} /> Hero Section Content
+            </h4>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                  <label className="text-sm font-bold text-slate-700">Main Hero Heading (Name)</label>
+                  <input 
+                    type="text" 
+                    value={profile.contact.name || ''} 
+                    onChange={e => setProfile({...profile, contact: {...profile.contact, name: e.target.value}})} 
+                    className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none"
+                    placeholder="e.g. Yogesh Pal" 
+                  />
+              </div>
+              <div className="space-y-2">
+                  <label className="text-sm font-bold text-slate-700">Hero Tagline / Sub-heading</label>
+                  <input 
+                    type="text" 
+                    value={profile.contact.tagline || ''} 
+                    onChange={e => setProfile({...profile, contact: {...profile.contact, tagline: e.target.value}})} 
+                    className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none"
+                  />
+              </div>
             </div>
           </div>
 
-          <div style={{ padding: '24px', background: '#fff', borderRadius: '16px', border: '1px solid #e2e8f0' }}>
-            <h4 style={{ marginBottom: '20px' }}>Portfolio Images</h4>
+          <div className="p-6 bg-white rounded-2xl border border-slate-200 shadow-sm space-y-6">
+            <h4 className="text-lg font-bold text-slate-800 pb-4 border-b border-slate-100 flex items-center gap-2">
+              <ImageIcon className="text-primary" size={20} /> Portfolio Assets
+            </h4>
             
-            {/* Hero Image */}
-            <div style={{ marginBottom: '24px' }}>
-              <label style={{ fontSize: '0.85rem', fontWeight: 600, color: '#64748b' }}>Hero Profile Image</label>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginTop: '8px' }}>
-                <img src={getImageUrl(profile.contact.profileImage)} style={{ width: '80px', height: '80px', borderRadius: '50%', objectFit: 'cover' }} />
-                <label className="nav-item active" style={{ cursor: 'pointer', padding: '8px 16px', fontSize: '0.85rem' }}>
-                   {uploading.profile ? 'Uploading...' : 'Change Hero Image'}
-                   <input type="file" style={{ display: 'none' }} onChange={(e) => handleFileUpload(e, 'profile')} />
-                </label>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              {/* Hero Image */}
+              <div className="space-y-3">
+                <label className="text-xs font-bold uppercase tracking-wider text-slate-500">Hero Profile Image</label>
+                <div className="flex flex-col items-center gap-4 p-4 bg-slate-50 rounded-xl border border-slate-100">
+                  <div className="relative group/avatar">
+                    <img src={getImageUrl(profile.contact.profileImage)} className="w-24 h-24 rounded-full object-cover ring-4 ring-white shadow-md" alt="hero" />
+                    <label className="absolute inset-0 bg-black/40 text-white flex items-center justify-center rounded-full opacity-0 group-hover/avatar:opacity-100 cursor-pointer transition-all">
+                       <Camera size={24} />
+                       <input type="file" className="hidden" onChange={(e) => handleFileUpload(e, 'profile')} />
+                    </label>
+                  </div>
+                  <span className="text-[10px] text-slate-400 font-medium">Recommended: 400x400 (Round)</span>
+                </div>
+              </div>
+
+              {/* CV Asset */}
+              <div className="space-y-3">
+                <label className="text-xs font-bold uppercase tracking-wider text-slate-500">Curriculum Vitae (CV)</label>
+                <div className="flex flex-col justify-center gap-4 p-4 bg-slate-50 rounded-xl border border-slate-100 h-full min-h-[136px]">
+                  <label className="flex items-center justify-center gap-2 bg-white px-4 py-2 rounded-lg border border-slate-200 text-sm font-bold text-slate-600 hover:text-primary hover:border-primary/50 cursor-pointer transition-all">
+                    <UploadCloud size={18} />
+                    {uploading.cv ? 'Uploading...' : 'Upload PDF'}
+                    <input type="file" className="hidden" onChange={(e) => handleFileUpload(e, 'cv')} />
+                  </label>
+                  {profile.contact.cv && (
+                    <p className="text-[10px] text-emerald-500 font-bold truncate text-center">
+                      ✓ {profile.contact.cv.split('/').pop()}
+                    </p>
+                  )}
+                </div>
               </div>
             </div>
 
             {/* About Images */}
-            <div style={{ marginBottom: '24px' }}>
-              <label style={{ fontSize: '0.85rem', fontWeight: 600, color: '#64748b' }}>About Section Images (2 Images)</label>
-              <div style={{ display: 'flex', gap: '16px', marginTop: '8px' }}>
+            <div className="space-y-3 pt-4 border-t border-slate-100">
+              <label className="text-xs font-bold uppercase tracking-wider text-slate-500">About Section Gallery</label>
+              <div className="grid grid-cols-2 gap-4">
                 {[1, 2].map(i => (
-                  <div key={i} style={{ flex: 1, textAlign: 'center' }}>
-                    <div style={{ height: '100px', backgroundColor: '#f8fafc', borderRadius: '8px', overflow: 'hidden', border: '1px solid #e2e8f0', marginBottom: '8px' }}>
-                      <img src={getImageUrl(profile.about.images[i-1])} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  <div key={i} className="space-y-2">
+                    <div className="relative group/about-img h-32 bg-slate-50 rounded-xl overflow-hidden border border-slate-100 shadow-sm">
+                      <img src={getImageUrl(profile.about.images[i-1])} className="w-full h-full object-cover" alt="about" />
+                      <label className="absolute inset-0 bg-black/40 text-white flex items-center justify-center opacity-0 group-hover/about-img:opacity-100 cursor-pointer transition-all">
+                        <Camera size={20} />
+                        <input type="file" className="hidden" onChange={(e) => handleFileUpload(e, `about${i}`)} />
+                      </label>
                     </div>
-                    <label style={{ fontSize: '0.75rem', cursor: 'pointer', color: '#6366f1', fontWeight: 600 }}>
-                      Edit Img {i}
-                      <input type="file" style={{ display: 'none' }} onChange={(e) => handleFileUpload(e, `about${i}`)} />
-                    </label>
+                    <p className="text-[10px] text-center text-slate-400 font-medium">About Image {i}</p>
                   </div>
                 ))}
               </div>
             </div>
 
             {/* Footer Image */}
-            <div>
-              <label style={{ fontSize: '0.85rem', fontWeight: 600, color: '#64748b' }}>Footer Logo/Image</label>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginTop: '8px' }}>
-                <img src={getImageUrl(profile.contact.footerImage)} style={{ width: '60px', height: '60px', objectFit: 'contain' }} />
-                <label style={{ fontSize: '0.85rem', cursor: 'pointer', color: '#6366f1', fontWeight: 600 }}>
-                   Change Footer Image
-                   <input type="file" style={{ display: 'none' }} onChange={(e) => handleFileUpload(e, 'footer')} />
+            <div className="space-y-3 pt-4 border-t border-slate-100">
+              <label className="text-xs font-bold uppercase tracking-wider text-slate-500">Footer Logo / Mark</label>
+              <div className="flex items-center gap-6 p-4 bg-slate-50 rounded-xl border border-slate-100">
+                <div className="w-16 h-16 bg-white p-2 rounded-lg shadow-sm flex items-center justify-center">
+                  <img src={getImageUrl(profile.contact.footerImage)} className="w-full h-full object-contain" alt="footer" />
+                </div>
+                <label className="text-sm font-bold text-primary hover:text-primary-hover cursor-pointer transition-colors">
+                   Change Image
+                   <input type="file" className="hidden" onChange={(e) => handleFileUpload(e, 'footer')} />
                 </label>
               </div>
             </div>
           </div>
 
-          {/* List Management: Strengths & Tech */}
-          <div style={{ padding: '24px', background: '#fff', borderRadius: '16px', border: '1px solid #e2e8f0' }}>
-            <h4 style={{ marginBottom: '20px' }}>Dynamic Lists (Skills & Strengths)</h4>
-            <div className="tip-box">
-              <p>Each item below will appear as a separate bullet point (<strong>&lt;li&gt;</strong>) in your portfolio.</p>
-            </div>
+          <div className="p-6 bg-white rounded-2xl border border-slate-200 shadow-sm space-y-8">
+            <h4 className="text-lg font-bold text-slate-800 pb-4 border-b border-slate-100 flex items-center gap-2">
+              <Plus className="text-primary" size={20} /> Skills & Strengths
+            </h4>
 
-            {/* Strengths */}
-            <div style={{ marginBottom: '24px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-                <label style={{ fontWeight: 600, fontSize: '0.95rem', color: '#1e293b' }}>Strengths</label>
-                <button 
-                  onClick={() => addListItem('strengths')} 
-                  style={{ padding: '6px 12px', fontSize: '0.8rem', borderRadius: '8px', backgroundColor: '#6366f1', color: '#fff', border: 'none', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
-                >
-                  <Plus size={14} /> Add Line
-                </button>
+            {['strengths', 'technical'].map(field => (
+              <div key={field} className="space-y-4">
+                <div className="flex justify-between items-center">
+                  <label className="text-sm font-bold text-slate-700 capitalize">{field}</label>
+                  <button 
+                    onClick={() => addListItem(field)} 
+                    className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 text-slate-600 rounded-lg text-xs font-bold hover:bg-primary hover:text-white transition-all"
+                  >
+                    <Plus size={14} /> Add Line
+                  </button>
+                </div>
+                <div className="space-y-2">
+                  {profile.about[field].map((item, i) => (
+                    <div key={i} className="flex gap-2 group/list-item">
+                      <input 
+                        type="text" 
+                        value={item} 
+                        onChange={(e) => handleListChange(field, i, e.target.value)} 
+                        className="flex-1 px-4 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-primary outline-none text-sm font-medium transition-all" 
+                        placeholder={`Enter ${field.slice(0, -1)}...`}
+                      />
+                      <button 
+                        onClick={() => removeListItem(field, i)} 
+                        className="p-2 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all"
+                      >
+                        <Trash2 size={18} />
+                      </button>
+                    </div>
+                  ))}
+                </div>
               </div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                {profile.about.strengths.map((item, i) => (
-                  <div key={i} style={{ display: 'flex', gap: '10px', alignItems: 'center', backgroundColor: '#f8fafc', padding: '8px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
-                    <input 
-                      type="text" 
-                      value={item} 
-                      onChange={(e) => handleListChange('strengths', i, e.target.value)} 
-                      style={{ flex: 1, border: 'none', background: 'none', padding: '4px 8px', outline: 'none', fontSize: '0.9rem' }} 
-                      placeholder="Enter strength..."
-                    />
-                    <button 
-                      onClick={() => removeListItem('strengths', i)} 
-                      style={{ color: '#ef4444', border: 'none', background: '#fee2e2', padding: '6px', borderRadius: '8px', cursor: 'pointer', display: 'flex' }}
-                    >
-                      <Trash2 size={16} />
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Technical */}
-            <div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-                <label style={{ fontWeight: 600, fontSize: '0.95rem', color: '#1e293b' }}>Technical Knowledge</label>
-                <button 
-                  onClick={() => addListItem('technical')} 
-                  style={{ padding: '6px 12px', fontSize: '0.8rem', borderRadius: '8px', backgroundColor: '#6366f1', color: '#fff', border: 'none', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
-                >
-                  <Plus size={14} /> Add Line
-                </button>
-              </div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                {profile.about.technical.map((item, i) => (
-                  <div key={i} style={{ display: 'flex', gap: '10px', alignItems: 'center', backgroundColor: '#f8fafc', padding: '8px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
-                    <input 
-                      type="text" 
-                      value={item} 
-                      onChange={(e) => handleListChange('technical', i, e.target.value)} 
-                      style={{ flex: 1, border: 'none', background: 'none', padding: '4px 8px', outline: 'none', fontSize: '0.9rem' }} 
-                      placeholder="Enter technical skill..."
-                    />
-                    <button 
-                      onClick={() => removeListItem('technical', i)} 
-                      style={{ color: '#ef4444', border: 'none', background: '#fee2e2', padding: '6px', borderRadius: '8px', cursor: 'pointer', display: 'flex' }}
-                    >
-                      <Trash2 size={16} />
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </div>
+            ))}
           </div>
         </div>
 
         {/* Right Column: Bio & Info */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
-           <div style={{ padding: '24px', background: '#fff', borderRadius: '16px', border: '1px solid #e2e8f0' }}>
-            <h4 style={{ marginBottom: '20px' }}>Bio Paragraphs</h4>
-            <div className="tip-box">
-              <p>💡 <strong>Highlighting Tip:</strong> Jin words ko aap highlight karna chahte hain, unhe <code>&lt;span&gt;word&lt;/span&gt;</code> ke beech mein likhein.</p>
+        <div className="space-y-8">
+          <div className="p-6 bg-white rounded-2xl border border-slate-200 shadow-sm space-y-6">
+            <h4 className="text-lg font-bold text-slate-800 pb-4 border-b border-slate-100 flex items-center gap-2">
+              <Info className="text-primary" size={20} /> Biography Details
+            </h4>
+            <div className="bg-amber-50 border border-amber-100 p-4 rounded-xl flex gap-3">
+              <div className="w-10 h-10 shrink-0 bg-white rounded-lg flex items-center justify-center text-amber-500 shadow-sm">
+                <Info size={20} />
+              </div>
+              <p className="text-xs text-amber-700 leading-relaxed font-medium">
+                <strong>Highlighting Tip:</strong> Use <code>&lt;span&gt;text&lt;/span&gt;</code> to highlight specific words in your bio (e.g. your name or key achievements).
+              </p>
             </div>
-            <div className="form-group">
-              <label>Paragraph 1</label>
-              <textarea rows="4" value={profile.about.para1} onChange={e => setProfile({...profile, about: {...profile.about, para1: e.target.value}})} />
-            </div>
-            <div className="form-group" style={{ marginTop: '16px' }}>
-              <label>Paragraph 2</label>
-              <textarea rows="4" value={profile.about.para2} onChange={e => setProfile({...profile, about: {...profile.about, para2: e.target.value}})} />
-            </div>
-            <div className="form-group" style={{ marginTop: '16px' }}>
-              <label>Paragraph 3</label>
-              <textarea rows="4" value={profile.about.para3} onChange={e => setProfile({...profile, about: {...profile.about, para3: e.target.value}})} />
-            </div>
-           </div>
-
-           <div style={{ padding: '24px', background: '#fff', borderRadius: '16px', border: '1px solid #e2e8f0' }}>
-            <h4 style={{ marginBottom: '20px' }}>CV & Socials</h4>
-            <div className="form-group">
-                <label>CV Upload (PDF)</label>
-                <input type="file" onChange={(e) => handleFileUpload(e, 'cv')} style={{ marginTop: '4px' }} />
-                {profile.contact.cv && <p style={{ fontSize: '0.75rem', color: '#10b981', marginTop: '4px' }}>CV current link: {profile.contact.cv.split('/').pop()}</p>}
-            </div>
-            <div style={{ marginTop: '24px' }}>
-                <h4 style={{ marginBottom: '16px', fontSize: '1rem' }}>Global Settings</h4>
-                <div className="form-group" style={{ marginTop: '12px' }}>
-                    <label>Contact Section Subheading</label>
-                    <input type="text" value={profile.contact.subheading || ''} onChange={e => setProfile({...profile, contact: {...profile.contact, subheading: e.target.value}})} />
+            
+            <div className="space-y-6">
+              {[1, 2, 3].map(i => (
+                <div key={i} className="space-y-2">
+                  <label className="text-sm font-bold text-slate-700 italic opacity-60">Biography Paragraph {i}</label>
+                  <textarea 
+                    rows="5" 
+                    value={profile.about[`para${i}`]} 
+                    onChange={e => setProfile({...profile, about: {...profile.about, [`para${i}`]: e.target.value}})} 
+                    className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none resize-none text-[0.95rem] leading-relaxed"
+                  />
                 </div>
-                <div className="form-group" style={{ marginTop: '16px' }}>
-                    <label>Address / City (e.g. Bareilly, UP)</label>
-                    <input type="text" value={profile.contact.address || ''} onChange={e => setProfile({...profile, contact: {...profile.contact, address: e.target.value}})} />
-                </div>
+              ))}
             </div>
+          </div>
 
-            <div style={{ marginTop: '32px' }}>
-                <label style={{ fontSize: '0.85rem', fontWeight: 600 }}>Update Social URLs</label>
-                {profile.contact.socialLinks.map((link, i) => (
-                    <div key={i} className="form-group" style={{ marginTop: '8px' }}>
-                        <label style={{ fontSize: '0.75rem' }}>{link.name}</label>
-                        <input type="text" value={link.url} onChange={e => {
-                            const newLinks = [...profile.contact.socialLinks];
-                            newLinks[i].url = e.target.value;
-                            setProfile({...profile, contact: {...profile.contact, socialLinks: newLinks}});
-                        }} />
+          <div className="p-6 bg-white rounded-2xl border border-slate-200 shadow-sm space-y-6">
+            <h4 className="text-lg font-bold text-slate-800 pb-4 border-b border-slate-100 flex items-center gap-2">
+              <Globe className="text-primary" size={20} /> Contact & Social Presence
+            </h4>
+            
+            <div className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div className="space-y-2">
+                    <label className="text-sm font-bold text-slate-700">Contact Subheading</label>
+                    <input 
+                      type="text" 
+                      value={profile.contact.subheading || ''} 
+                      onChange={e => setProfile({...profile, contact: {...profile.contact, subheading: e.target.value}})} 
+                      className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-primary outline-none"
+                    />
+                </div>
+                <div className="space-y-2">
+                    <label className="text-sm font-bold text-slate-700">Location / Address</label>
+                    <input 
+                      type="text" 
+                      value={profile.contact.address || ''} 
+                      onChange={e => setProfile({...profile, contact: {...profile.contact, address: e.target.value}})} 
+                      className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-primary outline-none"
+                      placeholder="e.g. Bareilly, UP"
+                    />
+                </div>
+              </div>
+
+              <div className="space-y-4 pt-4 border-t border-slate-50">
+                <label className="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-2">
+                  <Share2 size={14} /> Social Profiles
+                </label>
+                <div className="grid grid-cols-1 gap-3">
+                  {profile.contact.socialLinks.map((link, i) => (
+                    <div key={i} className="flex flex-col gap-1">
+                      <span className="text-[10px] font-bold text-slate-400 pl-1 uppercase">{link.name}</span>
+                      <input 
+                        type="text" 
+                        value={link.url} 
+                        onChange={e => {
+                          const newLinks = [...profile.contact.socialLinks];
+                          newLinks[i].url = e.target.value;
+                          setProfile({...profile, contact: {...profile.contact, socialLinks: newLinks}});
+                        }} 
+                        className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-primary outline-none text-sm font-medium transition-all"
+                      />
                     </div>
-                ))}
+                  ))}
+                </div>
+              </div>
             </div>
-           </div>
+          </div>
         </div>
       </div>
     </div>

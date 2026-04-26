@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import api from '../api';
-import { FolderKanban, Briefcase, GraduationCap, Mail } from 'lucide-react';
+import { FolderKanban, Briefcase, GraduationCap, Mail, Loader2 } from 'lucide-react';
 
 const Dashboard = () => {
   const [data, setData] = useState(null);
@@ -20,37 +20,49 @@ const Dashboard = () => {
     fetchData();
   }, []);
 
-  if (loading) return <div>Loading dashboard...</div>;
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center py-20 gap-4 text-slate-500 font-medium">
+        <Loader2 className="animate-spin text-primary" size={40} />
+        <p>Initializing your dashboard...</p>
+      </div>
+    );
+  }
 
   const stats = [
-    { label: 'Total Projects', value: data?.projects?.length || 0, icon: <FolderKanban />, color: '#6366f1' },
-    { label: 'Work Experience', value: data?.experience?.length || 0, icon: <Briefcase />, color: '#10b981' },
-    { label: 'Education', value: data?.education?.length || 0, icon: <GraduationCap />, color: '#f59e0b' },
-    { label: 'New Messages', value: data?.messages?.length || 0, icon: <Mail />, color: '#ef4444' },
+    { label: 'Total Projects', value: data?.projects?.length || 0, icon: <FolderKanban size={24} />, color: 'text-indigo-600', bg: 'bg-indigo-50' },
+    { label: 'Work Experience', value: data?.experience?.length || 0, icon: <Briefcase size={24} />, color: 'text-emerald-600', bg: 'bg-emerald-50' },
+    { label: 'Education', value: data?.education?.length || 0, icon: <GraduationCap size={24} />, color: 'text-amber-600', bg: 'bg-amber-50' },
+    { label: 'New Messages', value: data?.messages?.length || 0, icon: <Mail size={24} />, color: 'text-rose-600', bg: 'bg-rose-50' },
   ];
 
   return (
-    <div>
-      <h2 style={{ marginBottom: '24px' }}>Dashboard Overview</h2>
+    <div className="space-y-8">
+      <div>
+        <h2 className="text-2xl font-bold text-slate-800">Dashboard Overview</h2>
+        <p className="text-slate-500 text-sm">A quick snapshot of your portfolio performance</p>
+      </div>
       
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px' }}>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {stats.map((stat, index) => (
-          <div key={index} style={{ 
-            padding: '24px', 
-            borderRadius: '12px', 
-            backgroundColor: '#f1f5f9',
-            border: '1px solid #e2e8f0'
-          }}>
-            <div style={{ color: stat.color, marginBottom: '12px' }}>{stat.icon}</div>
-            <p style={{ fontSize: '0.875rem', color: '#64748b', fontWeight: 500 }}>{stat.label}</p>
-            <h3 style={{ fontSize: '1.5rem', fontWeight: 700 }}>{stat.value}</h3>
+          <div key={index} className="p-6 bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+            <div className={`w-12 h-12 ${stat.bg} ${stat.color} rounded-xl flex items-center justify-center mb-4`}>
+              {stat.icon}
+            </div>
+            <p className="text-sm font-semibold text-slate-500 mb-1">{stat.label}</p>
+            <h3 className="text-3xl font-bold text-slate-800 tracking-tight">{stat.value}</h3>
           </div>
         ))}
       </div>
 
-      <div style={{ marginTop: '40px' }}>
-        <h3>Quick Links</h3>
-        <p style={{ color: '#64748b' }}>Select a category from the sidebar to manage your portfolio content.</p>
+      <div className="mt-8 p-8 bg-slate-50 rounded-2xl border border-slate-100 flex flex-col items-center text-center">
+        <div className="w-16 h-16 bg-white rounded-full shadow-sm flex items-center justify-center mb-4 text-primary">
+          <FolderKanban size={32} />
+        </div>
+        <h3 className="text-xl font-bold text-slate-800 mb-2">Welcome to your Portfolio Admin</h3>
+        <p className="text-slate-500 max-w-lg leading-relaxed">
+          Use the sidebar to manage your projects, update your work experience, or reply to inbound messages. Everything you change here will reflect instantly on your live portfolio.
+        </p>
       </div>
     </div>
   );
