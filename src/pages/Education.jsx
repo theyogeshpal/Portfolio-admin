@@ -22,7 +22,7 @@ const Education = () => {
 
   const fetchEducation = async () => {
     try {
-      const { data } = await axios.get('http://localhost:5000/api/portfolio-data');
+      const { data } = await axios.get('https://portfolio-backend-95gv.onrender.com/api/portfolio-data');
       setEducation(data.education);
     } catch (err) {
       console.error(err);
@@ -35,9 +35,9 @@ const Education = () => {
     e.preventDefault();
     try {
       if (editId) {
-        await axios.put(`http://localhost:5000/api/education/${editId}`, formData);
+        await axios.put(`https://portfolio-backend-95gv.onrender.com/api/education/${editId}`, formData);
       } else {
-        await axios.post('http://localhost:5000/api/education', formData);
+        await axios.post('https://portfolio-backend-95gv.onrender.com/api/education', formData);
       }
       setIsModalOpen(false);
       resetForm();
@@ -66,7 +66,7 @@ const Education = () => {
   const deleteEdu = async (id) => {
     if (window.confirm('Are you sure you want to delete this entry?')) {
       try {
-        await axios.delete(`http://localhost:5000/api/education/${id}`);
+        await axios.delete(`https://portfolio-backend-95gv.onrender.com/api/education/${id}`);
         setEducation(education.filter(e => e._id !== id));
       } catch (err) {
         alert('Error deleting');

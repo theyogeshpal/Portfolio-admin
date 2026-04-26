@@ -15,7 +15,7 @@ const Login = () => {
     setError('');
 
     try {
-      const { data } = await axios.post('http://localhost:5000/api/admin/login', {
+      const { data } = await axios.post('https://portfolio-backend-95gv.onrender.com/api/admin/login', {
         email,
         password
       });

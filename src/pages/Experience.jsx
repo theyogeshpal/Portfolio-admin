@@ -24,7 +24,7 @@ const Experience = () => {
 
   const fetchExperience = async () => {
     try {
-      const { data } = await axios.get('http://localhost:5000/api/portfolio-data');
+      const { data } = await axios.get('https://portfolio-backend-95gv.onrender.com/api/portfolio-data');
       setExperiences(data.experience);
     } catch (err) {
       console.error(err);
@@ -42,9 +42,9 @@ const Experience = () => {
       };
       
       if (editId) {
-        await axios.put(`http://localhost:5000/api/experience/${editId}`, payload);
+        await axios.put(`https://portfolio-backend-95gv.onrender.com/api/experience/${editId}`, payload);
       } else {
-        await axios.post('http://localhost:5000/api/experience', payload);
+        await axios.post('https://portfolio-backend-95gv.onrender.com/api/experience', payload);
       }
       
       setIsModalOpen(false);
@@ -76,7 +76,7 @@ const Experience = () => {
   const deleteExperience = async (id) => {
     if (window.confirm('Are you sure you want to delete this experience entry?')) {
       try {
-        await axios.delete(`http://localhost:5000/api/experience/${id}`);
+        await axios.delete(`https://portfolio-backend-95gv.onrender.com/api/experience/${id}`);
         setExperiences(experiences.filter(e => e._id !== id));
       } catch (err) {
         alert('Error deleting');
