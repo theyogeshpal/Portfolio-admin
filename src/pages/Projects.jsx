@@ -25,7 +25,7 @@ const Projects = () => {
 
   const fetchProjects = async () => {
     try {
-      const { data } = await axios.get('http://localhost:5000/api/portfolio-data');
+      const { data } = await axios.get('https://portfolio-backend-95gv.onrender.com/api/portfolio-data');
       setProjects(data.projects);
     } catch (err) {
       console.error(err);
@@ -43,7 +43,7 @@ const Projects = () => {
     files.forEach(file => uploadData.append('images', file));
 
     try {
-      const { data } = await axios.post('http://localhost:5000/api/upload-multiple', uploadData);
+      const { data } = await axios.post('https://portfolio-backend-95gv.onrender.com/api/upload-multiple', uploadData);
       setFormData({ ...formData, images: [...formData.images, ...data.urls] });
     } catch (err) {
       alert('Failed to upload images');
@@ -58,9 +58,9 @@ const Projects = () => {
 
     try {
       if (editId) {
-        await axios.put(`http://localhost:5000/api/projects/${editId}`, formData);
+        await axios.put(`https://portfolio-backend-95gv.onrender.com/api/projects/${editId}`, formData);
       } else {
-        await axios.post('http://localhost:5000/api/projects', formData);
+        await axios.post('https://portfolio-backend-95gv.onrender.com/api/projects', formData);
       }
       setIsModalOpen(false);
       resetForm();
@@ -91,7 +91,7 @@ const Projects = () => {
   const deleteProject = async (id) => {
     if (window.confirm('Delete this project?')) {
       try {
-        await axios.delete(`http://localhost:5000/api/projects/${id}`);
+        await axios.delete(`https://portfolio-backend-95gv.onrender.com/api/projects/${id}`);
         setProjects(projects.filter(p => p._id !== id));
       } catch (err) {
         alert('Failed to delete project');
