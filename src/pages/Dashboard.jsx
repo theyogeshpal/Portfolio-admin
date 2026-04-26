@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../api';
 import { FolderKanban, Briefcase, GraduationCap, Mail } from 'lucide-react';
 
 const Dashboard = () => {
@@ -9,7 +9,7 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { data } = await axios.get('http://localhost:5000/api/portfolio-data');
+        const { data } = await api.get('/api/portfolio-data');
         setData(data);
       } catch (err) {
         console.error(err);

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import api, { API_URL } from '../api';
 import { Save, User, Globe, Share2, Camera, Loader2, UploadCloud, Info, Trash2, Plus, Image as ImageIcon } from 'lucide-react';
 
 const Profile = () => {
@@ -17,7 +17,7 @@ const Profile = () => {
 
   const fetchProfile = async () => {
     try {
-      const { data } = await axios.get('http://localhost:5000/api/portfolio-data');
+      const { data } = await api.get('/api/portfolio-data');
       setProfile({ contact: data.contact, about: data.about });
     } catch (err) {
       console.error(err);
@@ -35,7 +35,7 @@ const Profile = () => {
     formData.append('image', file);
 
     try {
-      const { data } = await axios.post('http://localhost:5000/api/upload', formData);
+      const { data } = await api.post('/api/upload', formData);
       if (type === 'profile') {
         setProfile({ ...profile, contact: { ...profile.contact, profileImage: data.url } });
       } else if (type === 'cv') {
@@ -74,7 +74,7 @@ const Profile = () => {
     if (e) e.preventDefault();
     setSaving(true);
     try {
-      await axios.put('http://localhost:5000/api/profile', profile);
+      await api.put('/api/profile', profile);
       alert('Profile updated successfully!');
     } catch (err) {
       alert('Error saving');
@@ -86,7 +86,7 @@ const Profile = () => {
   const getImageUrl = (url) => {
     if (!url) return '';
     if (url.startsWith('http')) return url;
-    return `http://localhost:5500/Portfolio/${url.replace('./', '')}`;
+    return `${API_URL}/${url.replace('./', '')}`;
   };
 
   if (loading) return <div style={{ display: 'flex', justifyContent: 'center', padding: '100px' }}><Loader2 className="animate-spin" size={48} color="#6366f1" /></div>;
