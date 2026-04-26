@@ -12,7 +12,7 @@ const Messages = () => {
 
   const fetchMessages = async () => {
     try {
-      const { data } = await axios.get('http://localhost:5000/api/messages');
+      const { data } = await axios.get('https://portfolio-backend-95gv.onrender.com/api/messages');
       setMessages(data);
     } catch (err) {
       console.error(err);
@@ -24,7 +24,7 @@ const Messages = () => {
   const deleteMessage = async (id) => {
     if (window.confirm('Are you sure you want to delete this message?')) {
       try {
-        await axios.delete(`http://localhost:5000/api/messages/${id}`);
+        await axios.delete(`https://portfolio-backend-95gv.onrender.com/api/messages/${id}`);
         setMessages(messages.filter(m => m._id !== id));
       } catch (err) {
         alert('Failed to delete message');

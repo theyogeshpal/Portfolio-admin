@@ -23,7 +23,7 @@ const Timeline = () => {
 
   const fetchTimeline = async () => {
     try {
-      const { data } = await axios.get('http://localhost:5000/api/portfolio-data');
+      const { data } = await axios.get('https://portfolio-backend-95gv.onrender.com/api/portfolio-data');
       setTimeline(data.timeline);
     } catch (err) {
       console.error(err);
@@ -41,7 +41,7 @@ const Timeline = () => {
     uploadData.append('image', file);
 
     try {
-      const { data } = await axios.post('http://localhost:5000/api/upload', uploadData);
+      const { data } = await axios.post('https://portfolio-backend-95gv.onrender.com/api/upload', uploadData);
       setFormData({ ...formData, image: data.url });
     } catch (err) {
       alert('Upload failed');
@@ -54,9 +54,9 @@ const Timeline = () => {
     e.preventDefault();
     try {
       if (editId) {
-        await axios.put(`http://localhost:5000/api/timeline/${editId}`, formData);
+        await axios.put(`https://portfolio-backend-95gv.onrender.com/api/timeline/${editId}`, formData);
       } else {
-        await axios.post('http://localhost:5000/api/timeline', formData);
+        await axios.post('https://portfolio-backend-95gv.onrender.com/api/timeline', formData);
       }
       setIsModalOpen(false);
       resetForm();
@@ -85,7 +85,7 @@ const Timeline = () => {
   const deleteItem = async (id) => {
     if (window.confirm('Are you sure you want to delete this item?')) {
       try {
-        await axios.delete(`http://localhost:5000/api/timeline/${id}`);
+        await axios.delete(`https://portfolio-backend-95gv.onrender.com/api/timeline/${id}`);
         setTimeline(timeline.filter(t => t._id !== id));
       } catch (err) {
         alert('Error deleting');
