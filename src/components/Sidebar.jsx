@@ -11,7 +11,7 @@ import {
   FolderKanban
 } from 'lucide-react';
 
-const Sidebar = () => {
+const Sidebar = ({ isOpen, closeSidebar }) => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -30,7 +30,7 @@ const Sidebar = () => {
   ];
 
   return (
-    <aside className="sidebar">
+    <aside className={`sidebar ${isOpen ? 'active' : ''}`}>
       <div className="sidebar-header">
         <h2>Admin Panel</h2>
         <p>Portfolio Manager</p>
@@ -42,6 +42,7 @@ const Sidebar = () => {
             key={item.path} 
             to={item.path} 
             className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
+            onClick={closeSidebar}
           >
             {item.icon}
             <span>{item.label}</span>

@@ -314,16 +314,91 @@ body {
   line-height: 1.6;
 }
 
-.tip-box {
-  background-color: #f0f9ff;
-  border-left: 4px solid #0ea5e9;
-  padding: 12px;
-  margin-bottom: 16px;
-  border-radius: 4px;
+/* Responsive Styles */
+.mobile-toggle {
+  display: none;
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1100;
+  background: var(--primary-color);
+  color: #fff;
+  border: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
 }
 
-.tip-box p {
-  font-size: 0.85rem;
-  color: #0369a1;
-  margin: 0;
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 1050;
+}
+
+@media (max-width: 1024px) {
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: -260px;
+    height: 100vh;
+    z-index: 1060;
+    transition: left 0.3s ease;
+  }
+
+  .sidebar.active {
+    left: 0;
+  }
+
+  .sidebar-overlay.active {
+    display: block;
+  }
+
+  .mobile-toggle {
+    display: flex;
+  }
+
+  .admin-main {
+    padding: 20px;
+    padding-top: 80px;
+  }
+
+  .admin-content-card {
+    padding: 20px;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .admin-main {
+    padding: 12px;
+    padding-top: 70px;
+  }
+
+  .admin-content-card {
+    padding: 16px;
+    border-radius: 12px;
+  }
+
+  .modal-container {
+    width: 95%;
+  }
+  
+  /* Stack tables or grids if needed */
+  .projects-grid,
+  .edu-exp-grid {
+    grid-template-columns: 1fr !important;
+  }
 }

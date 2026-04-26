@@ -119,7 +119,7 @@ const Projects = () => {
       {loading ? (
         <p>Loading projects...</p>
       ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '24px' }}>
+        <div className="projects-grid">
           {projects.map((project) => (
             <div key={project._id} style={{ border: '1px solid #e2e8f0', borderRadius: '16px', overflow: 'hidden', backgroundColor: '#fff' }}>
               <div style={{ position: 'relative' }}>
