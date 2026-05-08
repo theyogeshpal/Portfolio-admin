@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Plus, Trash2, ExternalLink, Image as ImageIcon, Loader2, Edit3, Star, Search, X } from 'lucide-react';
+import { Plus, Trash2, ExternalLink, Image as ImageIcon, Loader2, Edit3, Star, Search, X, Eye, EyeOff } from 'lucide-react';
 import Modal from '../components/Modal';
 
 const Projects = () => {
@@ -29,8 +29,8 @@ const Projects = () => {
 
   const fetchProjects = async () => {
     try {
-      const { data } = await axios.get('https://portfolio-backend-95gv.onrender.com/api/portfolio-data');
-      setProjects(data.projects);
+      const { data } = await axios.get('https://portfolio-backend-95gv.onrender.com/api/projects/all');
+      setProjects(data);
     } catch (err) {
       console.error(err);
     } finally {
@@ -100,6 +100,15 @@ const Projects = () => {
       } catch (err) {
         alert('Failed to delete project');
       }
+    }
+  };
+
+  const toggleVisibility = async (id, currentState) => {
+    try {
+      const { data } = await axios.patch(`https://portfolio-backend-95gv.onrender.com/api/projects/${id}/toggle-visibility`);
+      setProjects(projects.map(p => p._id === id ? { ...p, isVisible: data.isVisible } : p));
+    } catch (err) {
+      alert('Failed to toggle visibility');
     }
   };
 
@@ -185,21 +194,33 @@ const Projects = () => {
           {filteredProjects.map((project) => (
             <div key={project._id} className="group bg-white rounded-2xl border border-slate-200 overflow-hidden hover:shadow-xl hover:shadow-slate-200/50 transition-all duration-300">
               <div className="relative aspect-video overflow-hidden">
-                <img 
-                  src={getImageUrl(project.images[0])} 
-                  alt={project.title} 
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" 
+                <img
+                  src={getImageUrl(project.images[0])}
+                  alt={project.title}
+                  className={`w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 ${!project.isVisible ? 'opacity-40 grayscale' : ''}`}
                 />
+                {!project.isVisible && (
+                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    <span className="bg-black/60 text-white text-xs font-bold px-3 py-1 rounded-full">Hidden from website</span>
+                  </div>
+                )}
                 <div className="absolute inset-0 bg-black/40 flex items-center justify-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 backdrop-blur-[2px]">
-                  <button 
-                    onClick={(e) => { e.stopPropagation(); handleEdit(project); }} 
+                  <button
+                    onClick={(e) => { e.stopPropagation(); toggleVisibility(project._id); }}
+                    className={`w-10 h-10 rounded-full flex items-center justify-center hover:scale-110 transition-transform shadow-lg ${project.isVisible ? 'bg-emerald-500 text-white' : 'bg-slate-500 text-white'}`}
+                    title={project.isVisible ? 'Hide from website' : 'Show on website'}
+                  >
+                    {project.isVisible ? <Eye size={18} /> : <EyeOff size={18} />}
+                  </button>
+                  <button
+                    onClick={(e) => { e.stopPropagation(); handleEdit(project); }}
                     className="w-10 h-10 bg-white text-primary rounded-full flex items-center justify-center hover:scale-110 transition-transform shadow-lg"
                     title="Edit Project"
                   >
                     <Edit3 size={18} />
                   </button>
-                  <button 
-                    onClick={(e) => { e.stopPropagation(); deleteProject(project._id); }} 
+                  <button
+                    onClick={(e) => { e.stopPropagation(); deleteProject(project._id); }}
                     className="w-10 h-10 bg-red-500 text-white rounded-full flex items-center justify-center hover:scale-110 transition-transform shadow-lg"
                     title="Delete Project"
                   >
