@@ -103,22 +103,17 @@ const Projects = () => {
     }
   };
 
-  const moveProject = async (index, direction) => {
-    const newProjects = [...filteredProjects];
+  const moveProject = async (projectId, direction) => {
+    // Work on full projects list sorted by order
+    const sorted = [...projects].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+    const index = sorted.findIndex(p => p._id === projectId);
     const swapIndex = direction === 'up' ? index - 1 : index + 1;
-    if (swapIndex < 0 || swapIndex >= newProjects.length) return;
-    [newProjects[index], newProjects[swapIndex]] = [newProjects[swapIndex], newProjects[index]];
-    const orderedIds = newProjects.map(p => p._id);
+    if (swapIndex < 0 || swapIndex >= sorted.length) return;
+    [sorted[index], sorted[swapIndex]] = [sorted[swapIndex], sorted[index]];
+    const orderedIds = sorted.map(p => p._id);
     try {
       await axios.patch('https://portfolio-backend-95gv.onrender.com/api/projects/reorder', { orderedIds });
-      setProjects(prev => {
-        const updated = [...prev];
-        orderedIds.forEach((id, i) => {
-          const idx = updated.findIndex(p => p._id === id);
-          if (idx !== -1) updated[idx] = { ...updated[idx], order: i };
-        });
-        return updated.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
-      });
+      setProjects(sorted.map((p, i) => ({ ...p, order: i })));
     } catch (err) {
       alert('Failed to reorder');
     }
@@ -148,10 +143,8 @@ const Projects = () => {
       return matchesSearch && matchesCategory;
     })
     .sort((a, b) => {
-      if (sortBy === 'top-rated') {
-        return (b.averageRating || 0) - (a.averageRating || 0);
-      }
-      return new Date(b.createdAt) - new Date(a.createdAt);
+      if (sortBy === 'top-rated') return (b.averageRating || 0) - (a.averageRating || 0);
+      return (a.order ?? 0) - (b.order ?? 0);
     });
 
   return (
@@ -199,7 +192,7 @@ const Projects = () => {
             onChange={(e) => setSortBy(e.target.value)}
             className="flex-1 md:w-40 px-4 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-primary outline-none text-sm font-medium transition-all"
           >
-            <option value="newest">Newest First</option>
+            <option value="newest">Custom Order</option>
             <option value="top-rated">Top Rated</option>
           </select>
         </div>
@@ -278,8 +271,8 @@ const Projects = () => {
                   </a>
                   <div className="flex items-center gap-1">
                     <button
-                      onClick={() => moveProject(index, 'up')}
-                      disabled={index === 0}
+                      onClick={() => moveProject(project._id, 'up')}
+                      disabled={projects.sort((a,b)=>(a.order??0)-(b.order??0)).findIndex(p=>p._id===project._id) === 0}
                       className="w-7 h-7 flex items-center justify-center rounded-lg bg-slate-100 hover:bg-primary hover:text-white text-slate-500 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
                       title="Move Up"
                     >
@@ -287,8 +280,8 @@ const Projects = () => {
                     </button>
                     <span className="text-[10px] font-bold text-slate-400">#{index + 1}</span>
                     <button
-                      onClick={() => moveProject(index, 'down')}
-                      disabled={index === filteredProjects.length - 1}
+                      onClick={() => moveProject(project._id, 'down')}
+                      disabled={projects.sort((a,b)=>(a.order??0)-(b.order??0)).findIndex(p=>p._id===project._id) === projects.length - 1}
                       className="w-7 h-7 flex items-center justify-center rounded-lg bg-slate-100 hover:bg-primary hover:text-white text-slate-500 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
                       title="Move Down"
                     >
