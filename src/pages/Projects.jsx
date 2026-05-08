@@ -104,19 +104,10 @@ const Projects = () => {
   };
 
   const getImageUrl = (url) => {
-    if (typeof url !== 'string') return '';
+    if (typeof url !== 'string' || !url) return '';
     if (url.startsWith('http')) return url;
-    
-    // Legacy paths
-    const cleanUrl = url.replace('./', '').replace('images/', '');
-    
-    // New uploads
-    if (!url.includes('/')) {
-        return `https://portfolio-backend-95gv.onrender.com/uploads/${cleanUrl}`;
-    }
-    
-    // Portfolio assets
-    return `https://yogesh-pal.netlify.app/images/${cleanUrl}`;
+    const filename = url.replace(/^.*[\/\\]/, '');
+    return `https://yogesh-pal.netlify.app/images/${filename}`;
   };
 
   const filteredProjects = projects
