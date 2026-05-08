@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Plus, Trash2, ExternalLink, Image as ImageIcon, Loader2, Edit3, Star, Search, X, Eye, EyeOff } from 'lucide-react';
+import { Plus, Trash2, ExternalLink, Image as ImageIcon, Loader2, Edit3, Star, Search, X, Eye, EyeOff, ArrowUp, ArrowDown } from 'lucide-react';
 import Modal from '../components/Modal';
 
 const Projects = () => {
@@ -103,6 +103,27 @@ const Projects = () => {
     }
   };
 
+  const moveProject = async (index, direction) => {
+    const newProjects = [...filteredProjects];
+    const swapIndex = direction === 'up' ? index - 1 : index + 1;
+    if (swapIndex < 0 || swapIndex >= newProjects.length) return;
+    [newProjects[index], newProjects[swapIndex]] = [newProjects[swapIndex], newProjects[index]];
+    const orderedIds = newProjects.map(p => p._id);
+    try {
+      await axios.patch('https://portfolio-backend-95gv.onrender.com/api/projects/reorder', { orderedIds });
+      setProjects(prev => {
+        const updated = [...prev];
+        orderedIds.forEach((id, i) => {
+          const idx = updated.findIndex(p => p._id === id);
+          if (idx !== -1) updated[idx] = { ...updated[idx], order: i };
+        });
+        return updated.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+      });
+    } catch (err) {
+      alert('Failed to reorder');
+    }
+  };
+
   const toggleVisibility = async (id, currentState) => {
     try {
       const { data } = await axios.patch(`https://portfolio-backend-95gv.onrender.com/api/projects/${id}/toggle-visibility`);
@@ -191,7 +212,7 @@ const Projects = () => {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-          {filteredProjects.map((project) => (
+          {filteredProjects.map((project, index) => (
             <div key={project._id} className="group bg-white rounded-2xl border border-slate-200 overflow-hidden hover:shadow-xl hover:shadow-slate-200/50 transition-all duration-300">
               <div className="relative aspect-video overflow-hidden">
                 <img
@@ -255,6 +276,25 @@ const Projects = () => {
                     <ExternalLink size={14} />
                     <span>Live Preview</span>
                   </a>
+                  <div className="flex items-center gap-1">
+                    <button
+                      onClick={() => moveProject(index, 'up')}
+                      disabled={index === 0}
+                      className="w-7 h-7 flex items-center justify-center rounded-lg bg-slate-100 hover:bg-primary hover:text-white text-slate-500 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                      title="Move Up"
+                    >
+                      <ArrowUp size={14} />
+                    </button>
+                    <span className="text-[10px] font-bold text-slate-400">#{index + 1}</span>
+                    <button
+                      onClick={() => moveProject(index, 'down')}
+                      disabled={index === filteredProjects.length - 1}
+                      className="w-7 h-7 flex items-center justify-center rounded-lg bg-slate-100 hover:bg-primary hover:text-white text-slate-500 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                      title="Move Down"
+                    >
+                      <ArrowDown size={14} />
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
